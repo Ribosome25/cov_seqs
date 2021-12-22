@@ -1,0 +1,7 @@
+{
+    "n_chnls": [256, 128],
+    "kers_strides": [8, 4, 8, 4],
+    "opt": "adam",
+    "layer_config": "1111",
+    "lr": 5e-4
+}

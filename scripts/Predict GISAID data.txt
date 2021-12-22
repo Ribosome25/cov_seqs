@@ -1,0 +1,112 @@
+------------------------------------------------------------
+Contents:
+ (1) RF and Ridge regression
+with BiLSTM embedding; (2) RF and Ridge regression with
+ProtBert embedding; (3) 1-D CNN trained on VHSE encoded
+sequences; and (4) TR with SW distance trained on randomly
+selected training samples.
+------------------------------------------------------------
+Data processing, 以lab pc G:/Datasets/GisAid 为准。
+GISAID1203+omicron.parquet 是Protein Seqs + Omicron, 去掉三个明显不对的。
+Also copied to topo/data/GisAid
+------------------------------------------------------------
+LAB pc env tf, HPC env dl
+------------------------------------------------------------
+
+(1) BiLSTM:
+* on HPC, viral_mutation/bin/cov.py:
+
+    if args.self_embed_fitness:
+        from combinatorial_fitness import load_starr2020, self_load_gisaid
+
+* in self_load_gisaid, used:
+	mut_seq = fields[1].strip('*') 
+	所以Gisaid data file 's  column 必须照顺序。
+
+* 修改了
+    with open('/home/ruibzhan/Datasets/GISAID_0820/Seqs_w_meta_.csv') as f:
+	readline...
+    改成parquet， df['xxx']
+    
+
+* submit the sh file in /bin
+
+* mutation.py -> embed_seqs_for_fitness
+  修改保存路径
+  有part 1 和 2 的区别，需要每次run sh 时 在cov.py 结尾该。
+  手动改了part, submit sh。   cscs score parquet 没有part 的是part2
+
+------------------------------------------------------------
+(2) ProtBert
+比较简单，直接修改ProtBert.py
+修改了读df 和存文件的path
+拆分part 以前是以50000条拆分，这次由60000
+------------------------------------------------------------
+(1) & (2)
+修改后transfer 到HPC 上 run.
+
+
+下载之后 run 
+sci&Bert_ref_model_gisaid.py
+------------------------------------------------------------
+(3)
+# clear the temp files in HPC topo data  and processed
+Done
+
+# sample train and test index from sci dms data and gisaid 1203
+python sample_anchors.py --df_path data\fitness_embeddings\Seqs_Fitness.parquet --num_train 20000 --num_anchors 2000 --save_path processed/Sci_fitness_2000anchors_sample.json
+python sample_anchors.py --df_path data\GisAid\GISAID1203+omicron.parquet --num_train 0 --num_anchors 0 --num_test None --save_path processed/GisAid_allfortest_sample.json
+Done
+
+# combine the index jsons sampled from two different sets.
+python combine_two_jsons.py --train_json processed\Sci_fitness_2000anchors_sample.json --anchors_json processed\Sci_fitness_2000anchors_sample.json --test_json processed\GisAid_allfortest_sample.json --save_path processed\sci-gisaid_index.json
+Done
+
+# upload the data parquet file to HPC topo/data
+# upload the idx json file to HPC topo/processed
+Done
+
+# calculate both the training and test distance on HPC
+run SW_distance.sh on HPC
+mod --df_path
+Done
+
+# copy files to lab pc
+processed/sci-gisaid_distance_train_20kT2kA.parquet processed/sci-gisaid_distance_test_20kT2kA.parquet
+Done
+
+HPC put the wrong file name. should be 20kT. Named as 50 kT
+
+# train topo reg 
+python train_precomputed.py --distance_path processed/sci-gisaid_distance_train_20kT2kA.parquet processed/sci-gisaid_distance_test_20kT2kA.parquet --target_file data/fitness_embeddings/Seqs_Fitness.parquet --targets fitness --model lr --index_json processed/sci-gisaid_index.json --model_save_path outputs/sci-gisaid-mdl/LR-20kT2kA-mdl.mdl
+
+# predict with topo reg
+python predict_precomputed.py --distance_path processed/sci-gisaid_distance_test_20kT2kA.parquet --index_json processed/sci-gisaid_index.json --target_file data/fitness_embeddings/Seqs_Fitness.parquet --targets fitness --model_path outputs/sci-gisaid-mdl/LR-20kT2kA-mdl.mdl --save_path outputs/sci-gisaid-mdl/LR-20kT2kA-prediction.csv --rbf_gamma 0.5 1 1.5 2 5 --knn 1 3 5 10
+
+------------------------------------------------------------
+(4)
+# VHSE encoding
+run sbatch GISAID_VHSE.sh on HPC
+mod --df_path
+Done
+
+# copy VHSE encodings to Lab PC. 
+Done
+
+# Max length is?
+1330
+
+# train and save a CNN
+(max len 不同，重训练一遍)
+python train_vhse_CNN.py --max_length 1330 --x_train data\fitness_embeddings\VHSE_embedding_matched.parquet --target_file data\fitness_embeddings\Seqs_Fitness.parquet --targets fitness --model_params ref_models\supp_CNN_params.json --save_dir outputs/VHSE_CNN_model --plot_history
+h5 weizhi cuole, chongzuo
+
+# predict on the new d set
+python predict_vhse_CNN.py --x_test data/GisAid/gisaid_VHSE_embed.parquet --model_path Outputs/VHSE_CNN_model/model.h5 --save_path Outputs/VHSE_CNN_model/predictions.csv
+Done
+
+------------------------------------------------------------
+(5) Plot density by variant
+
+
+
