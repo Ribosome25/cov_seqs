@@ -22,7 +22,8 @@ from sklearn.neighbors import KNeighborsClassifier as KNN
 from sklearn.ensemble import RandomForestClassifier as RFC
 
 from sklearn.metrics.pairwise import pairwise_distances
-import loaddata, calculate_distance, reconstruct
+import loaddata
+from topo_reg import calculate_distance, reconstruct
 from myToolbox.Metrics import corr_and_error, sextuple, twocat_sextuple_1d
 
 #%%
@@ -323,7 +324,7 @@ def SW_distance_fullset(n_anchors=200, mdl=LR(), knn=10, rbf_gamma=None, dset='f
     """
 
     if dset == 'fitness':
-        dist_all = pd.read_parquet("./temp/reversed/from_HPC_{}anchors_Seed20.parquet".format(n_anchors))  # for binding dataset  # TODO: production branch the same?
+        dist_all = pd.read_parquet("./temp/fitness_reversed/from_HPC_{}anchors_Seed20.parquet".format(n_anchors))  # for binding dataset  # TODO: production branch the same?
         dist_all = dist_all.max() - dist_all
     elif dset == 'expression':
         dist_all = pd.read_parquet("./temp/from_HPC_WholeSet500anchors_expression_Seed20.parquet")  # for expression dataset
@@ -462,7 +463,7 @@ def knn_ref_holdout_model(knns=5):
     #     calculate_distance.SW_x_train_p(data, None, data.index),
     #     index=data.index, columns=data.index)
     # ---- Load distance ----
-    dist_all = pd.read_parquet("./temp/from_HPC_allpairs_forKNN_Seed{}.parquet".format(RANDOM_SEED))
+    dist_all = pd.read_parquet("data/precomputed/from_HPC_allpairs_forKNN_Seed{}.parquet".format(RANDOM_SEED))
     dist_all = dist_all.max() - dist_all
     x_train = dist_all.loc[X_train.index, X_train.index]
     y_train = df.loc[X_train.index, 'fitness']
@@ -518,7 +519,7 @@ if __name__ == "__main__":
     SAMPLE_FRAC = 0.05
     # SAMPLE_FRAC = 0.005
     # SAMPLE_FRAC = 1
-    # SAMPLE_FRAC = 0.001  # for test run
+    SAMPLE_FRAC = 0.001  # for test run
     RANDOM_SEED = 20
 
 
@@ -531,7 +532,7 @@ if __name__ == "__main__":
     # raise
 
 
-    # (2) Embedding -> common models.
+    # # (2) Embedding -> common models.
     # mdls = [
     #     LogisticRegression(),
     #     RFC(min_samples_leaf=3, n_jobs=-1)
@@ -549,7 +550,7 @@ if __name__ == "__main__":
     # SW_distance_holdout(10, metric='sw', mdl=mdls, rbf_gamma=[0.5, 1, 5, 10], knn=[1, 3, 5, 10])
     if SAMPLE_FRAC < 1:
         SW_distance_holdout(200, metric='sw', mdl=mdls, rbf_gamma=[0.5, 1, 5, 10], knn=[1, 3, 5, 10])
-        if SAMPLE_FRAC == 0.005:
+        if SAMPLE_FRAC <= 0.01:
             SW_distance_holdout(None, metric='sw', mdl=mdls, rbf_gamma=[0.5, 1, 5, 10], knn=[1, 3, 5, 10])
         else:
             SW_distance_holdout(500, metric='sw', mdl=mdls, rbf_gamma=[0.5, 1, 5, 10], knn=[1, 3, 5, 10])

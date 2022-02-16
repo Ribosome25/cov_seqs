@@ -22,7 +22,8 @@ from tensorflow.keras import layers
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics.pairwise import pairwise_distances
-import loaddata, calculate_distance, reconstruct
+import loaddata
+from topo_reg import calculate_distance, reconstruct
 from sklearn.linear_model import LinearRegression as LR
 from sklearn.linear_model import Ridge
 from sklearn.neighbors import KNeighborsRegressor as KNN

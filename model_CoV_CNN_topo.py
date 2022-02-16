@@ -8,7 +8,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-import loaddata, calculate_distance, reconstruct
+import loaddata
+from topo_reg import calculate_distance, reconstruct
 from myToolbox.Metrics import sextuple
 from sklearn.linear_model import LinearRegression as LR
 from sklearn.metrics.pairwise import pairwise_distances

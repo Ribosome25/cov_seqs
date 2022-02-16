@@ -17,7 +17,8 @@ from sklearn.neighbors import KNeighborsRegressor as KNN
 from sklearn.ensemble import RandomForestRegressor as RFR
 from sklearn.gaussian_process import GaussianProcessRegressor as GPR
 from sklearn.metrics.pairwise import pairwise_distances
-import loaddata, calculate_distance, reconstruct
+import loaddata
+from topo_reg import calculate_distance, reconstruct
 from myToolbox.Metrics import corr_and_error, sextuple
 
 #%%
@@ -305,7 +306,7 @@ def SW_distance_fullset(n_anchors=200, mdl=LR(), knn=10, rbf_gamma=None):
     """
     Logic: 后面计算大样本量，n_anchors << n_samples. anchors 每次基本是全新的，不能重复利用，没必要在loop 外计算
     """
-    dist_all = pd.read_parquet("./temp/反距离/from_HPC_{}anchors_Seed20.parquet".format(n_anchors))  # for binding dataset
+    dist_all = pd.read_parquet("./temp/reversed_distance/from_HPC_{}anchors_Seed20.parquet".format(n_anchors))  # for binding dataset
     # dist_all = pd.read_parquet("./temp/from_HPC_WholeSet500anchors_expression_Seed20.parquet")  # for expression dataset
     
     dist_all = dist_all.max() - dist_all  # TODO: temp   # for binding dataset

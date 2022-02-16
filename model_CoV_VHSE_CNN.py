@@ -20,7 +20,8 @@ from tensorflow.keras import layers
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics.pairwise import pairwise_distances
-import loaddata, calculate_distance, reconstruct
+import loaddata
+from topo_reg import calculate_distance, reconstruct
 from sklearn.linear_model import LinearRegression as LR
 from sklearn.linear_model import Ridge
 from sklearn.neighbors import KNeighborsRegressor as KNN
@@ -251,15 +252,14 @@ del X_train, X_valid, X_test
 intermediate_layer_model = keras.Model(inputs=model.input,
                                  outputs=model.get_layer('max_pooling1d_1').output)
 
-# embed = pd.read_parquet("../Datasets/Science21_virus_seq/from_HPC_VHSE_embedding.parquet", engine='fastparquet')
 embed = pd.read_parquet("data/fitness_embeddings/VHSE_embedding_matched.parquet", engine='fastparquet')
 embed = embed.values.reshape(len(embed), -1, 8)
 
 intermediate_output = intermediate_layer_model.predict(embed)
-np.save("./temp/cnn_embedding_orderedsameasmatched.npy", intermediate_output)  # 顺序是不变的。
+np.save("precomputed/cnn_embedding_orderedsameasmatched.npy", intermediate_output)  # 顺序是不变的。
 
 embed = pd.read_parquet("data/fitness_embeddings/from_HPC_VHSE_embedding.parquet", engine='fastparquet')
 embed = embed.values.reshape(len(embed), -1, 8)
 
 intermediate_output = intermediate_layer_model.predict(embed)
-np.save("./temp/cnn_embedding_orderedsameasfromhpc.npy", intermediate_output)  # 顺序是不变的。
+np.save("precomputed/cnn_embedding_orderedsameasfromhpc.npy", intermediate_output)  # 顺序是不变的。

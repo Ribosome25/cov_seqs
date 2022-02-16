@@ -5,11 +5,8 @@ Created on Thu Nov  5 20:42:57 2020
 @author: ruibzhan
 """
 #%%
-import os
-import pickle
 import numpy as np
 import pandas as pd
-from myToolbox.Preprocessing import Impute, drop_too_many_nans
 #%%
 
 #%%
@@ -34,7 +31,7 @@ def load_Sci_embeddings(pooling='mean', dataset='fitness'):
     elif 'cscs' in pooling.lower():
         embd = pd.read_parquet("data/{}/CscsScore.parquet".format(folder))[['sem_change', 'cscs']]
     else:
-        raise ValueError("{}： This pooling method is not calculated. ".format(pooling))
+        raise ValueError("{}: This pooling method is not calculated. ".format(pooling))
     return embd, df
 
 def load_Bert_embeddings(pooling='average', dataset='fitness'):
