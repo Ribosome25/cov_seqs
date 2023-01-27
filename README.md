@@ -20,6 +20,12 @@ Topo Reg using CNN as similarity metric: `model_CoV_CNN_topo`
 
 LSTM is modified from https://github.com/brianhie/viral-mutation. bin/combinatorial_fitness.py, bin/mutation.py and bin/cov.py are modified for our usage. The modified files are provided in `ref_models/science2021`. 
 
+An example usage of embedding generation: after cloning Brian Hie's repo, replace the bin/combinatorial_fitness.py, bin/mutation.py and bin/cov.py with code provided in this repo, and run
+
+`python ./viral-mutation/bin/cov.py bilstm --checkpoint ../models/cov.hdf5 --self-embed-fitness`
+
+to generate BiLSTM embeddings.
+
 BERT embedding is generated with `ref_models/ProtBert/ProtBert.py`.
 
 The script for modeling and performance is provided in `scripts/model_CoV_seq.py`
