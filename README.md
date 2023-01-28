@@ -20,7 +20,7 @@ Argument parser TAP: `pip install typed-argument-parser`
 
 Smith-Waterman distances (negative alignment scores) and Levenshtein distances are computed and used in subsequent modeling. For subsampled datasets, distances are computed at runtime. For the whole set, distances are precomputed using MPI parallel computing for time concerns. 
 
-Check out scripts/SW_distance.sh for using MPI distance precomputation.
+Check out `scripts/SW_distance.sh` and `mpi_SW_distance.py` for using MPI distance precomputation.
 
 ### LSTM / BERT embedding generation
 
