@@ -16,6 +16,22 @@ Argument parser TAP: `pip install typed-argument-parser`
 
 scikit-bio for Smith-Waterman alignment score calculation `pip install scikit-bio`
 
+fast-parquet for loading and saving pd.DF to parquet files `pip install fastparquet==0.5.0`
+
+mpi4py for MPI parallel computing: `pip install mpi4py==3.0.3`
+
+Improtant library versions:
+
+```
+keras == 2.4.3
+tensorflow == 2.3.0
+torch == 1.10.0
+pandas == 1.2.3
+scikit-learn == 1.0.2
+numpy == 1.21.6
+cuda == 10.2
+```
+
 ## Data Preprocessing and Embedding Generation
 
 ### Distance calculation 
