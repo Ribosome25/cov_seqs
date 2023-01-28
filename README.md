@@ -14,6 +14,8 @@ Model performances are evaluated with module myToolbox. https://github.com/Ribos
 
 Argument parser TAP: `pip install typed-argument-parser`
 
+scikit-bio for Smith-Waterman alignment score calculation `pip install scikit-bio`
+
 ## Data Preprocessing and Embedding Generation
 
 ### Distance calculation 
@@ -38,7 +40,7 @@ BERT embedding is generated with `ref_models/ProtBert/ProtBert.py`.
 
 VHSE encoding is generated with MPI parallelly. 
 
-Run `ref_models/mpi_vhse.py` with input and output path as arguments. See `ref_models/args.py` for arguments details. 
+Run `ref_models/mpi_VHSE_gen.py` with input and output path as arguments. See `ref_models/args.py` for arguments details. Checkout `ref_models/mpi_vhse.py` for details. 
 
 ## Experiments and Results
 
