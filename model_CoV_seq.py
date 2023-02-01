@@ -19,7 +19,7 @@ from sklearn.gaussian_process import GaussianProcessRegressor as GPR
 from sklearn.metrics.pairwise import pairwise_distances
 import loaddata
 from topo_reg import calculate_distance, reconstruct
-from myToolbox.Metrics import corr_and_error, sextuple
+from myToolbox.Metrics import octuple
 
 #%%
 def write_perform(mssg, file_name="Results_CoV_intersected.csv"):
@@ -81,7 +81,7 @@ def simple_distance_test(n_anchors=100, mdl=LR(), metric='Levenshtein', knn=10, 
         else:
             response_array = reconstruct.knn(dist_array, y_train, anchors_idx, knn=knn)
 
-        performance = sextuple(y_test, response_array.ravel(), False)
+        performance = octuple(y_test, response_array.ravel(), False)
 
         print("Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}".format(*performance))
         if rbf_gamma is not None:
@@ -119,12 +119,12 @@ def test_precompute_knn():
         y_test = y[test_index]
         mdl = KNN(metric='precomputed').fit(x_train, y_train)
         pred = mdl.predict(x_test)
-        performance = sextuple(y_test.ravel(), pred.ravel(), False)
+        performance = octuple(y_test.ravel(), pred.ravel(), False)[:6]
 
         print("Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}\nNMAE: {}".format(*performance))
 
         mdl0 = KNN().fit(x[train_index], y[train_index])
-        perform0 = sextuple(y[test_index], mdl0.predict(x[test_index]), False)
+        perform0 = octuple(y[test_index], mdl0.predict(x[test_index]), False)[:6]
         print("Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}\nNMAE: {}".format(*perform0))
         print("=====================================")
 
@@ -143,7 +143,7 @@ def ref_model():
         y_test = data.iloc[test_index, 1]
         mdl = KNN(metric='precomputed').fit(x_train, y_train)
         pred = mdl.predict(x_test)
-        performance = sextuple(y_test.values.ravel(), pred.ravel(), False)
+        performance = octuple(y_test.values.ravel(), pred.ravel(), False)[:6]
 
         print("Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}".format(*performance))
         write_perform(["Reference KNN,,,", *performance])
@@ -233,7 +233,7 @@ def SW_distance_holdout(n_anchors=100, mdl=LR(), metric='Levenshtein', knn=10,
         # 对 LR 正反距离都一样
         for each_gamma in rbf_gamma:
             response_array_r_v = reconstruct.rbf(dist_array_valid, y_train["fitness"], anchors_idx, each_gamma, False)
-            performance_r_v = sextuple(y_valid['fitness'], response_array_r_v.ravel(), False)
+            performance_r_v = octuple(y_valid['fitness'], response_array_r_v.ravel(), False)
             print("Valid: RBF: Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance_r_v))
             write_perform(["Validation", metric, submtr, str(each_mdl).replace(",", ";"),
                            n_anchors, "rbf {}".format(each_gamma),
@@ -242,7 +242,7 @@ def SW_distance_holdout(n_anchors=100, mdl=LR(), metric='Levenshtein', knn=10,
             np.save("actual_valid.npy", y_valid['fitness'].values)
             
             response_array_r_t = reconstruct.rbf(dist_array_test, y_train["fitness"], anchors_idx, each_gamma, False)
-            performance_r_t = sextuple(y_test['fitness'], response_array_r_t.ravel(), False)
+            performance_r_t = octuple(y_test['fitness'], response_array_r_t.ravel(), False)[:6]
             print("Test: RBF: Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance_r_t))
             write_perform(["Testing", metric, submtr, str(each_mdl).replace(",", ";"),
                            n_anchors, "rbf {}".format(each_gamma),
@@ -252,14 +252,14 @@ def SW_distance_holdout(n_anchors=100, mdl=LR(), metric='Levenshtein', knn=10,
 
         for each_k in knn:
             response_array_k_v = reconstruct.knn(dist_array_valid, y_train["fitness"], anchors_idx, knn=each_k)
-            performance_k_v = sextuple(y_valid['fitness'], response_array_k_v.ravel(), False)
+            performance_k_v = octuple(y_valid['fitness'], response_array_k_v.ravel(), False)[:6]
             print("knn: Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance_k_v))
             write_perform(["Validation", metric, submtr, str(each_mdl).replace(",", ";"),
                            n_anchors, "{}-NN".format(each_k),
                            *performance_k_v], v_fname)
 
             response_array_k_t = reconstruct.knn(dist_array_test, y_train["fitness"], anchors_idx, knn=each_k)
-            performance_k_t = sextuple(y_test['fitness'], response_array_k_t.ravel(), False)
+            performance_k_t = octuple(y_test['fitness'], response_array_k_t.ravel(), False)[:6]
             print("knn: Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance_k_t))
             write_perform(["Testing", metric, submtr, str(each_mdl).replace(",", ";"),
                            n_anchors, "{}-NN".format(each_k),
@@ -331,7 +331,7 @@ def SW_distance_fullset(n_anchors=200, mdl=LR(), knn=10, rbf_gamma=None):
 
         for each_gamma in rbf_gamma:
             response_array_r_v = reconstruct.rbf(dist_array_valid, y_train["fitness"], anchors_idx, each_gamma, False)
-            performance_r_v = sextuple(y_valid['fitness'], response_array_r_v.ravel(), False)
+            performance_r_v = octuple(y_valid['fitness'], response_array_r_v.ravel(), False)[:6]
             print("Valid: RBF: Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance_r_v))
             write_perform(["Validation", metric, submtr, str(each_mdl).replace(",", ";"),
                            n_anchors, "rbf {}".format(each_gamma),
@@ -339,7 +339,7 @@ def SW_distance_fullset(n_anchors=200, mdl=LR(), knn=10, rbf_gamma=None):
             np.save("topo_valid_result.npy", response_array_r_v)  #TODO: temporary
             np.save("actual_valid.npy", y_valid['fitness'].values)
             response_array_r_t = reconstruct.rbf(dist_array_test, y_train["fitness"], anchors_idx, each_gamma, False)
-            performance_r_t = sextuple(y_test['fitness'], response_array_r_t.ravel(), False)
+            performance_r_t = octuple(y_test['fitness'], response_array_r_t.ravel(), False)[:6]
             print("Test: RBF: Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance_r_t))
             write_perform(["Testing", metric, submtr, str(each_mdl).replace(",", ";"),
                            n_anchors, "rbf {}".format(each_gamma),
@@ -349,7 +349,7 @@ def SW_distance_fullset(n_anchors=200, mdl=LR(), knn=10, rbf_gamma=None):
             
         for each_k in knn:
             response_array_k_v = reconstruct.knn(dist_array_valid, y_train["fitness"], anchors_idx, knn=each_k)
-            performance_k_v = sextuple(y_valid['fitness'], response_array_k_v.ravel(), False)
+            performance_k_v = octuple(y_valid['fitness'], response_array_k_v.ravel(), False)[:6]
             print("knn: Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance_k_v))
             write_perform(["Validation", metric, submtr, str(each_mdl).replace(",", ";"),
                            n_anchors, "{}-NN".format(each_k),
@@ -358,7 +358,7 @@ def SW_distance_fullset(n_anchors=200, mdl=LR(), knn=10, rbf_gamma=None):
             np.save("actual_valid.npy", y_valid['fitness'].values)
             
             response_array_k_t = reconstruct.knn(dist_array_test, y_train["fitness"], anchors_idx, knn=each_k)
-            performance_k_t = sextuple(y_test['fitness'], response_array_k_t.ravel(), False)
+            performance_k_t = octuple(y_test['fitness'], response_array_k_t.ravel(), False)[:6]
             print("knn: Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance_k_t))
             write_perform(["Testing", metric, submtr, str(each_mdl).replace(",", ";"),
                            n_anchors, "{}-NN".format(each_k),
@@ -398,8 +398,8 @@ def embedding_ref_mdl(ref_mdl = LR(), dataset='ProtBert', pooling='avg'):
         each_mdl.fit(X_train, y_train["fitness"])
         pred_v = each_mdl.predict(X_valid)
         pred_t = each_mdl.predict(X_test)
-        performance_v = sextuple(y_valid['fitness'], pred_v, False)   #TODO
-        performance_t = sextuple(y_test['fitness'], pred_t, False)
+        performance_v = octuple(y_valid['fitness'], pred_v, False)[:6]   #TODO
+        performance_t = octuple(y_test['fitness'], pred_t, False)[:6]
         print("Test\nSpearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance_t))
         write_perform(["Validation,Ref mdl", dataset, "{} Pooling".format(pooling),
                        str(each_mdl).replace(",", ";"), *performance_v],
@@ -410,7 +410,7 @@ def embedding_ref_mdl(ref_mdl = LR(), dataset='ProtBert', pooling='avg'):
     return None
 
 def knn_ref_holdout_model():
-
+    # For KNN on the whole set.
     _, df = loaddata.load_Sci_embeddings()
     # print(_.shape)
     redo_index = ["I{}".format(x) for x in range(len(df))]
@@ -430,7 +430,7 @@ def knn_ref_holdout_model():
     #     calculate_distance.SW_x_train_p(data, None, data.index),
     #     index=data.index, columns=data.index)
     # ---- Load distance ----
-    dist_all = pd.read_parquet("./temp/from_HPC_allpairs_forKNN_Seed{}.parquet".format(RANDOM_SEED))
+    dist_all = pd.read_parquet("./data/from_HPC_allpairs_forKNN_Seed{}.parquet".format(RANDOM_SEED))
     dist_all = dist_all.max() - dist_all
     x_train = dist_all.loc[X_train.index, X_train.index]
     y_train = df.loc[X_train.index, 'fitness']
@@ -438,12 +438,13 @@ def knn_ref_holdout_model():
     y_test = df.loc[X_test.index, 'fitness']
     mdl = KNN(metric='precomputed', n_neighbors=20).fit(x_train, y_train)
     pred = mdl.predict(x_test)
-    performance = sextuple(y_test.values.ravel(), pred.ravel(), False)
+    performance = octuple(y_test.values.ravel(), pred.ravel(), False)[:6]
 
     print("Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance))
     write_perform(["Reference KNN,SW,blosum55,seed20,5-nn", *performance], "Results_heldout_testset.csv")
 
 def knn_ref_small_holdout_model(knns=[1, 3, 5, 10, 20]):
+    # For KNN on subsampled dataset. 
     _, df = loaddata.load_Sci_embeddings()
     # print(_.shape)
     redo_index = ["I{}".format(x) for x in range(len(df))]
@@ -471,7 +472,7 @@ def knn_ref_small_holdout_model(knns=[1, 3, 5, 10, 20]):
     for knn in knns:
         mdl = KNN(metric='precomputed', n_neighbors=knn).fit(x_train, y_train)
         pred = mdl.predict(x_test)
-        performance = sextuple(y_test.values.ravel(), pred.ravel(), False)
+        performance = octuple(y_test.values.ravel(), pred.ravel(), False)[:6]
 
         print("Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance))
         write_perform(["Reference KNN,SW,blosum55,seed{},{}-nn".format(RANDOM_SEED, knn),
@@ -489,11 +490,10 @@ if __name__ == "__main__":
 
     # # Uncomment each code block to perform the test.
 
-    # # (1) KNN
-    # knn_ref_holdout_model()
-    # knn_ref_holdout_model(10)
-    # knn_ref_holdout_model(20)
-    # raise
+    # (1) KNN
+    knn_ref_holdout_model()
+    knn_ref_small_holdout_model([10, 20])
+    raise
 
     # (2) Embedding -> common models.
     mdls = [RFR(n_jobs=-1, verbose=True, min_samples_leaf=3),
@@ -503,15 +503,18 @@ if __name__ == "__main__":
     embedding_ref_mdl(mdls, dataset='bert')
     raise
     
-
+    # (3) Topological Regression
     mdls = [RFR(n_jobs=-1, verbose=True, min_samples_leaf=3),
             Ridge(),
             LR()]
-
-    # (3) Topological Regression
     if SAMPLE_FRAC < 1:
+        if SAMPLE_FRAC == 0.001:
+            # test run
+            SW_distance_holdout(None, metric='sw', mdl=mdls, rbf_gamma=[0.5, 1, 5, 10], knn=[1, 3, 5, 10])
+            raise
+
         SW_distance_holdout(200, metric='sw', mdl=mdls, rbf_gamma=[0.5, 1, 5, 10], knn=[1, 3, 5, 10])
-        if SAMPLE_FRAC == 0.005:
+        if SAMPLE_FRAC <= 0.005:
             SW_distance_holdout(None, metric='sw', mdl=mdls, rbf_gamma=[0.5, 1, 5, 10], knn=[1, 3, 5, 10])
         else:
             SW_distance_holdout(500, metric='sw', mdl=mdls, rbf_gamma=[0.5, 1, 5, 10], knn=[1, 3, 5, 10])

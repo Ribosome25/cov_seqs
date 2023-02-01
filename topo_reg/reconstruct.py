@@ -17,7 +17,6 @@ from sklearn.linear_model import Ridge
 from sklearn.ensemble import RandomForestRegressor as RFR
 
 # import loaddata, calculate_distance, model_NCI
-from myToolbox.Metrics import corr_and_error, sextuple
 #%%
 def _inv(x):
     return 1 / x

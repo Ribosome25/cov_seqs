@@ -12,6 +12,8 @@ Special dependencies:
 
 Model performances are evaluated with module myToolbox. https://github.com/Ribosome25/myToolbox 
 
+Navigate to the site-package dir and clone the repo. such as `~/conda/envs/<env name>/lib/python3.8/site-packages$ git clone https://github.com/Ribosome25/myToolbox.git`
+
 Argument parser TAP: `pip install typed-argument-parser`
 
 scikit-bio for Smith-Waterman alignment score calculation `pip install scikit-bio`
@@ -80,7 +82,7 @@ Topo Reg using CNN as similarity metric: `model_CoV_CNN_topo.py`
 
 ### VHSE - CNN
 
-Model output, performance: `model_CoV_VHSE_CNN` and `model_CoV_VHSE_CNN_clf`
+For model output, performance, and embedding generation: `model_CoV_VHSE_CNN` and `model_CoV_VHSE_CNN_clf`
 
 Grid search parameter tuning: `model_VHSE_CNN_gridsearch_clf` 
 
@@ -105,7 +107,9 @@ FC-layers parameter grid search and performances evaluation are in `model_NLP_fc
 
 Evaluated in  `model_CoV_seq.py` and `model_CoV_seq_clf`
 
-Checkout `knn_ref_holdout_model()` https://github.com/Ribosome25/cov_seqs/blob/6c79b50ad40d7957587f186dfbbe8328883af51f/model_CoV_seq.py#L412 for details. 
+Whole dataset: `knn_ref_holdout_model()` https://github.com/Ribosome25/cov_seqs/blob/6c79b50ad40d7957587f186dfbbe8328883af51f/model_CoV_seq.py#L412 .
+
+Subsampled dataset:  `knn_ref_small_holdout_model()`
 
 ### Clustering scatter plot and visualization
 
