@@ -25,6 +25,7 @@ mpi4py for MPI parallel computing: `pip install mpi4py==3.0.3`
 Improtant library versions:
 
 ```
+python == 3.7.10
 keras == 2.4.3
 tensorflow == 2.3.0
 torch == 1.10.0
