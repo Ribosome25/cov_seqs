@@ -11,7 +11,7 @@ from tensorflow.keras import layers
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import loaddata
-from myToolbox.Metrics import sextuple
+from myToolbox.Metrics import octuple
 
 # config = tf.ConfigProto(device_count = {'GPU': 1 , 'CPU': 3})
 # sess = tf.Session(config=config)
@@ -114,7 +114,7 @@ def run(data='sci', opt='adam', layer_config='11111', lr=1e-3, d_frac=0.05):
     valid_err = history.history['val_loss'][-1]
     predictions = model.predict(X_test)
     print("predictions shape:", predictions.shape)
-    performance = sextuple(y_test['fitness'].values.ravel(), predictions.ravel(), False)
+    performance = octuple(y_test['fitness'].values.ravel(), predictions.ravel(), False)[:6]
     print(performance)
     write_perform(["Keras FC Model {},{},{},{},{}".format(d_frac, data, opt, layer_config, lr),
                    valid_err, *performance])

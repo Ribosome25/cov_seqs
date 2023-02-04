@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import loaddata
 from topo_reg import calculate_distance, reconstruct
-from myToolbox.Metrics import sextuple
+from myToolbox.Metrics import octuple
 from sklearn.linear_model import LinearRegression as LR
 from sklearn.metrics.pairwise import pairwise_distances
 
@@ -85,14 +85,14 @@ for each_mdl in mdl:
 
     for each_gamma in rbf_gamma:
         response_array_r_v = reconstruct.rbf(dist_array_valid, y_train["fitness"], anchors_idx, each_gamma, False)
-        performance_r_v = sextuple(y_valid['fitness'], response_array_r_v.ravel(), False)
+        performance_r_v = octuple(y_valid['fitness'], response_array_r_v.ravel(), False)[:6]
         print("Valid: RBF: Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance_r_v))
         write_perform(["Validation", metric, submtr, str(each_mdl).replace(",", ";"),
                        n_anchors, "rbf {}".format(each_gamma),
                        *performance_r_v], "Results_{}_validset.csv".format(output_file))
 
         response_array_r_t = reconstruct.rbf(dist_array_test, y_train["fitness"], anchors_idx, each_gamma, False)
-        performance_r_t = sextuple(y_test['fitness'], response_array_r_t.ravel(), False)
+        performance_r_t = octuple(y_test['fitness'], response_array_r_t.ravel(), False)[:6]
         print("Test: RBF: Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance_r_t))
         write_perform(["Testing", metric, submtr, str(each_mdl).replace(",", ";"),
                        n_anchors, "rbf {}".format(each_gamma),
@@ -100,14 +100,14 @@ for each_mdl in mdl:
 
     for each_k in knn:
         response_array_k_v = reconstruct.knn(dist_array_valid, y_train["fitness"], anchors_idx, knn=each_k)
-        performance_k_v = sextuple(y_valid['fitness'], response_array_k_v.ravel(), False)
+        performance_k_v = octuple(y_valid['fitness'], response_array_k_v.ravel(), False)[:6]
         print("knn: Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance_k_v))
         write_perform(["Validation", metric, submtr, str(each_mdl).replace(",", ";"),
                        n_anchors, "{}-NN".format(each_k),
                        *performance_k_v], "Results_{}_validset.csv".format(output_file))
 
         response_array_k_t = reconstruct.knn(dist_array_test, y_train["fitness"], anchors_idx, knn=each_k)
-        performance_k_t = sextuple(y_test['fitness'], response_array_k_t.ravel(), False)
+        performance_k_t = octuple(y_test['fitness'], response_array_k_t.ravel(), False)[:6]
         print("knn: Spearman: {}\nPearson: {}\nMSE: {}\nMAE: {}\nNRMSE: {}".format(*performance_k_t))
         write_perform(["Testing", metric, submtr, str(each_mdl).replace(",", ";"),
                        n_anchors, "{}-NN".format(each_k),
