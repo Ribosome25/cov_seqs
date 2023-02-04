@@ -27,7 +27,7 @@ from sklearn.linear_model import Ridge
 from sklearn.neighbors import KNeighborsRegressor as KNN
 from sklearn.ensemble import RandomForestRegressor as RFR
 from sklearn.gaussian_process import GaussianProcessRegressor as GPR
-from myToolbox.Metrics import sextuple
+from myToolbox.Metrics import octuple
 #%%
 def write_perform(mssg, file_name="Results_CoV_VHSE_CNN_Rsearch.csv"):
     string = "\n{}" + ",{}"*(len(mssg)-1)
@@ -89,7 +89,7 @@ X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_siz
 #             Ridge(), LR()]:
 #     mdl.fit(X_train.reshape(len(X_train), -1), y_train['fitness'])
 #     pred = mdl.predict(X_test.reshape(len(X_test), -1))
-#     ref_pref = sextuple(y_test['fitness'].values.ravel(), pred.ravel(), False)
+#     ref_pref = octuple(y_test['fitness'].values.ravel(), pred.ravel(), False)[:6]
 #     write_perform(["VHSE,{},{},{},SEED{}".format(SAMPLE_FRAC, str(mdl).replace(",", ";"),
 #                                                  len(_), RANDOM_SEED), *ref_pref])
 
@@ -101,7 +101,7 @@ def grid_search_model():
     # Define Sequential model with 3 layers
     model = keras.Sequential(
         [
-        keras.Input(shape=1273*8, name='Input'),
+        # keras.Input(shape=1273*8, name='Input'),
 
         layers.Conv1D(
             input_shape=(1273, 8),
@@ -235,7 +235,7 @@ np.save("cnn_valid_results.npy", model.predict(X_valid))
 predictions = model.predict(X_test)
 np.save("cnn_results.npy", predictions)
 print("predictions shape:", predictions.shape)
-performance = sextuple(y_test['fitness'].values.ravel(), predictions.ravel(), False)
+performance = octuple(y_test['fitness'].values.ravel(), predictions.ravel(), False)[:6]
 print(performance)
 valid_err = history.history['val_loss'][-1]
 
