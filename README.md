@@ -35,6 +35,12 @@ numpy == 1.21.6
 cuda == 10.2
 ```
 
+Data availability:
+
+Some essential processed data can be downloaded via https://texastechuniversity-my.sharepoint.com/:u:/g/personal/ruibo_zhang_ttu_edu/EVlhSLZMzq5Crphdn6bw7qoBAnW1pkRc7bX7wNZxDTw4xg?e=yzx8ML 
+
+Other processed data available on request. 
+
 ## Data Preprocessing and Embedding Generation
 
 ### Distance calculation 
