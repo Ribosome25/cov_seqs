@@ -22,6 +22,8 @@ fast-parquet for loading and saving pd.DF to parquet files `pip install fastparq
 
 mpi4py for MPI parallel computing: `pip install mpi4py==3.0.3`
 
+keras_tuner for random search ANN and CNN parameters.
+
 ### Improtant library versions:
 
 ```
