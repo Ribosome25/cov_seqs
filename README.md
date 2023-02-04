@@ -8,7 +8,7 @@ Code for reproducing the results in *Zhang, et. al. Predicting binding affinitie
 
 This repository provides the code to reproduce the results of the following models: Smith-Waterman alignment score -> topological regression; VHSE -> 1D CNN; Bi-LSTM - FC layers or ridge regression; ProtBERT embedding -> FC layers or ridge regression.
 
-Special dependencies:
+### Special dependencies:
 
 Model performances are evaluated with module myToolbox. https://github.com/Ribosome25/myToolbox 
 
@@ -22,7 +22,7 @@ fast-parquet for loading and saving pd.DF to parquet files `pip install fastparq
 
 mpi4py for MPI parallel computing: `pip install mpi4py==3.0.3`
 
-Improtant library versions:
+### Improtant library versions:
 
 ```
 python == 3.7.10
@@ -35,7 +35,7 @@ numpy == 1.21.6
 cuda == 10.2
 ```
 
-Data availability:
+### Data availability:
 
 Some essential processed data can be downloaded via https://texastechuniversity-my.sharepoint.com/:u:/g/personal/ruibo_zhang_ttu_edu/EVlhSLZMzq5Crphdn6bw7qoBAnW1pkRc7bX7wNZxDTw4xg?e=yzx8ML 
 
