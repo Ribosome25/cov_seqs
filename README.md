@@ -16,7 +16,7 @@ Navigate to the site-package dir and clone the repo. such as `~/conda/envs/<env 
 
 Argument parser TAP: `pip install typed-argument-parser`
 
-scikit-bio for Smith-Waterman alignment score calculation `pip install scikit-bio`
+scikit-bio for Smith-Waterman alignment score calculation `pip install scikit-bio`. If erros pop up when importing skbio, please try early version scikit-bio==0.5.6
 
 fast-parquet for loading and saving pd.DF to parquet files `pip install fastparquet==0.5.0`
 
